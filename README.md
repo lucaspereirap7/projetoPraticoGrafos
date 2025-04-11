@@ -1,0 +1,45 @@
+# Trabalho Prático - Etapa 1 - Grafos e Suas Aplicações
+
+Este projeto é a implementação da Etapa 1 do trabalho prático da disciplina **Grafos e Suas Aplicações**, utilizando a linguagem **Python**. O objetivo principal é fazer o pré-processamento de arquivos `.dat` com descrições de grafos e extrair estatísticas importantes.
+
+O Grupo do projeto é composto apenas por mim: **Lucas de Oliveira Pereira** com número de matrícula 202210578.
+
+## Estrutura do Projeto
+
+O projeto está organizado da seguinte forma:
+
+```
+
+trabalhoPraticoGrafos/
+│
+├── dats/                  # Arquivos de entrada (.dat)
+│   ├── BHW1.dat
+│   ├── BHW2.dat
+│   └── ...
+│
+├── main.py                # Arquivo principal, com toda logica do projeto
+├── teste.ipynb            # Notebook de teste
+└── README.md              # Este arquivo
+
+```
+
+## Requisitos
+
+- Python instalado (usei a versão 3.12.1, mas deve funcionar em outras recentes)
+
+## Como Executar
+
+1. **Clone o projeto ou baixe os arquivos**
+2. Abra um terminal e vá até a pasta do projeto.
+3. Execute o `python main.py`.
+4. Se quiser rodar codigos no arquivo de teste, deve instalar o pandas e o jupyer. Pode ser com o comando `pip install notebook pandas`
+
+## Exemplo de Saída
+
+Estatísticas do grafo:
+Qtd Vértices: 12
+Qtd Arestas: 0
+Qtd Arcos: 25
+Qtd Vértices Requeridos: 4
+Qtd Arestas Requeridas: 0
+...e as outras estatisticas solicitadas
