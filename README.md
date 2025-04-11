@@ -37,9 +37,10 @@ trabalhoPraticoGrafos/
 ## Exemplo de Saída
 
 Estatísticas do grafo:
-Qtd Vértices: 12
-Qtd Arestas: 0
-Qtd Arcos: 25
-Qtd Vértices Requeridos: 4
-Qtd Arestas Requeridas: 0
+1. Qtd Vértices: 12
+2. Qtd Arestas: 0
+3. Qtd Arcos: 25
+4. Qtd Vértices Requeridos: 4
+5. Qtd Arestas Requeridas: 0
+
 ...e as outras estatisticas solicitadas
