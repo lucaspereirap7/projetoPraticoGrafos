@@ -20,10 +20,10 @@ trabalhoPraticoGrafos/
 ├── main.py                # Arquivo principal, com toda logica do projeto
 ├── teste.ipynb            # Notebook de teste
 └── README.md              # Este arquivo
-└── G22/                   # Resultados da segunda etapa
+├── G22/                  # Resultado dos arquivos de entrada (.dat)
 │   ├── sol-BHW1.dat
-│   ├── sol-BHW2.dat      
-
+│   ├── sol-BHW2.dat
+│   └── ...
 ```
 
 ## Requisitos
