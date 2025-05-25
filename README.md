@@ -1,8 +1,8 @@
-# Trabalho Prático - Etapa 1 - Grafos e Suas Aplicações
+# Trabalho Prático - Etapa 1 e 2 - Grafos e Suas Aplicações
 
-Este projeto é a implementação da Etapa 1 do trabalho prático da disciplina **Grafos e Suas Aplicações**, utilizando a linguagem **Python**. O objetivo principal é fazer o pré-processamento de arquivos `.dat` com descrições de grafos e extrair estatísticas importantes.
+Este projeto é a implementação da Etapa 1 e 2 do trabalho prático da disciplina **Grafos e Suas Aplicações**, utilizando a linguagem **Python**. O objetivo principal é fazer o pré-processamento de arquivos `.dat` com descrições de grafos e extrair estatísticas importantes.
 
-O Grupo do projeto é composto apenas por mim: **Lucas de Oliveira Pereira** com número de matrícula 202210578.
+Grupo composto por: **Lucas de Oliveira Pereira** matrícula 202210578 e **Vinicius Passos Oliveira** matrícula 202210579.
 
 ## Estrutura do Projeto
 
@@ -20,6 +20,9 @@ trabalhoPraticoGrafos/
 ├── main.py                # Arquivo principal, com toda logica do projeto
 ├── teste.ipynb            # Notebook de teste
 └── README.md              # Este arquivo
+└── G22/                   # Resultados da segunda etapa
+│   ├── sol-BHW1.dat
+│   ├── sol-BHW2.dat      
 
 ```
 
