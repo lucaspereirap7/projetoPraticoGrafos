@@ -242,6 +242,104 @@ def construir_rotas_guloso(grafo, servicos, capacidade, dist):
 
     return rotas
 
+def calcular_custo_rota(visitas, dist, grafo):
+    custo_total = 0
+
+    for i in range(len(visitas) - 1):
+        atual = visitas[i]
+        proximo = visitas[i + 1]
+
+        if atual[0] == 'D':
+            pos_atual = grafo.deposito
+        else:
+            pos_atual = atual[3]  
+
+        if proximo[0] == 'D':
+            pos_proximo = grafo.deposito
+        else:
+            pos_proximo = proximo[2] 
+
+        custo_total += dist[pos_atual][pos_proximo]
+
+        if proximo[0] == 'S':
+            pass  
+
+    return custo_total
+
+def aplicar_2opt_rota(rota, dist, grafo, servicos_dict):
+    visitas = rota['visitas'].copy()
+    melhor_custo = rota['custo']
+    melhorou = True
+
+    servicos_rota = visitas[1:-1]
+
+    if len(servicos_rota) < 2:
+        return rota 
+
+    while melhorou:
+        melhorou = False
+
+        for i in range(len(servicos_rota)):
+            for j in range(i + 2, len(servicos_rota)):
+                nova_sequencia = servicos_rota.copy()
+                nova_sequencia[i:j+1] = reversed(nova_sequencia[i:j+1])
+
+                nova_rota_visitas = [visitas[0]] + nova_sequencia + [visitas[-1]]
+
+                novo_custo = calcular_custo_completo_rota(nova_rota_visitas, dist, grafo, servicos_dict)
+
+                if novo_custo < melhor_custo:
+                    servicos_rota = nova_sequencia
+                    melhor_custo = novo_custo
+                    melhorou = True
+                    break
+
+            if melhorou:
+                break
+
+    nova_rota = {
+        'demanda': rota['demanda'],
+        'custo': melhor_custo,
+        'visitas': [visitas[0]] + servicos_rota + [visitas[-1]]
+    }
+
+    return nova_rota
+
+def calcular_custo_completo_rota(visitas, dist, grafo, servicos_dict):
+    custo_total = 0
+
+    for i in range(len(visitas) - 1):
+        atual = visitas[i]
+        proximo = visitas[i + 1]
+
+        if atual[0] == 'D':
+            pos_atual = grafo.deposito
+        else:
+            pos_atual = atual[3]
+
+        if proximo[0] == 'D':
+            pos_proximo = grafo.deposito
+        else:
+            pos_proximo = proximo[2] 
+
+        custo_total += dist[pos_atual][pos_proximo]
+
+    for visita in visitas:
+        if visita[0] == 'S':
+            servico_id = visita[1]
+            if servico_id in servicos_dict:
+                custo_total += servicos_dict[servico_id]['custo_servico']
+
+    return custo_total
+
+def otimizar_rotas_2opt(rotas, dist, grafo, servicos):
+    servicos_dict = {s['id']: s for s in servicos}
+    rotas_otimizadas = []
+    for rota in rotas:
+        rota_otimizada = aplicar_2opt_rota(rota, dist, grafo, servicos_dict)
+        rotas_otimizadas.append(rota_otimizada)
+    return rotas_otimizadas
+
 def buscar_clocks(nome_instancia, arquivo_csv='reference_values.csv'):
     clocks_exec = 0
     clocks_sol = 0
@@ -367,27 +465,40 @@ if __name__ == '__main__':
     caminho_medio = soma_caminhos / total_caminhos if total_caminhos else 0
 
     print("Estatísticas do grafo:")
-    print(f"Qtd Vértices: {n_vertices}")
+    print(f"Qtd Vértices: {n_vertices}")
     print(f"Qtd Arestas: {n_arestas}")
     print(f"Qtd Arcos: {n_arcos}")
-    print(f"Qtd Vértices Requeridos: {len(vertices_requeridos)}")
+    print(f"Qtd Vértices Requeridos: {len(vertices_requeridos)}")
     print(f"Qtd Arestas Requeridas: {len(arestas_requeridas)}")
     print(f"Qtd Arcos Requeridos: {len(arcos_requeridos)}")
     print(f"Densidade: {densidade}")
     print(f"Componentes conectados: {componentes}")
-    print(f"Grau Mínimo: {grau_min}")
-    print(f"Grau Máximo: {grau_max}")
-    print(f"Intermediação: {inter}")
-    print(f"Caminho Médio: {round(caminho_medio, 3)}")
-    print(f"Diâmetro: {diametro}")
-    
+    print(f"Grau Mínimo: {grau_min}")
+    print(f"Grau Máximo: {grau_max}")
+    print(f"Intermediação: {inter}")
+    print(f"Caminho Médio: {round(caminho_medio, 3)}")
+    print(f"Diâmetro: {diametro}")
+
     capacidade = grafo.capacidade
     servicos = construir_servicos(grafo)
-    rotas = construir_rotas_guloso(grafo, servicos, capacidade, dist)
-    custo_total = sum(r['custo'] for r in rotas if r['custo'] < float('inf'))
+    rotas_iniciais = construir_rotas_guloso(grafo, servicos, capacidade, dist)
+    custo_inicial = sum(r['custo'] for r in rotas_iniciais if r['custo'] < float('inf'))
+
+    print(f"Solução inicial - Custo: {custo_inicial}, Rotas: {len(rotas_iniciais)}")
+
+    rotas_otimizadas = otimizar_rotas_2opt(rotas_iniciais, dist, grafo, servicos)
+    custo_otimizado = sum(r['custo'] for r in rotas_otimizadas if r['custo'] < float('inf'))
+
     clocks_exec, clocks_sol = buscar_clocks(nome_instancia)
     os.makedirs('G22', exist_ok=True)
     caminho_saida = os.path.join('G22', f"sol-{nome_instancia}.dat")
-    imprimir_solucao_em_arquivo(rotas, custo_total, clocks_exec, clocks_sol, caminho_saida)
+    imprimir_solucao_em_arquivo(rotas_otimizadas, custo_otimizado, clocks_exec, clocks_sol, caminho_saida)
 
-    print(f"Solução salva em: {caminho_saida}")
+    print(f"\nSolução otimizada salva em: {caminho_saida}")
+
+    melhoria = custo_inicial - custo_otimizado
+    if custo_inicial != 0:
+        percentual = (melhoria / custo_inicial) * 100
+        print(f"Melhoria total: {melhoria} ({percentual:.2f}%)")
+    else:
+        print(f"Melhoria total: {melhoria} (não foi possível calcular percentual, custo inicial = 0)")
